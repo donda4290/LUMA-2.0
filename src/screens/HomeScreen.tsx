@@ -49,45 +49,14 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Hero Section with Background Image */}
-        <View style={styles.heroSection}>
-          <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1511818966892-d612672e2540?w=800&h=400&fit=crop' }}
-            style={styles.heroBackground}
-            resizeMode="cover"
-          />
-          <View style={styles.heroOverlay}>
-            <Text style={styles.heroTitle}>
-              Welcome to Lumina
-            </Text>
-            <Text style={styles.heroSubtitle}>
-              Discover architectural excellence
-            </Text>
-          </View>
-        </View>
-
-        {/* Featured Categories Grid */}
-        <View style={styles.categoriesSection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Explore</Text>
-          <View style={styles.categoriesGrid}>
-            {[
-              { name: 'Modern', image: 'https://images.unsplash.com/photo-1511818966892-d612672e2540?w=200&h=200&fit=crop' },
-              { name: 'Sustainable', image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=200&h=200&fit=crop' },
-              { name: 'Brutalist', image: 'https://images.unsplash.com/photo-1520637736862-4d197d17c72a?w=200&h=200&fit=crop' },
-              { name: 'Urban', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop' },
-            ].map((category, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.categoryCard}
-                onPress={() => (navigation as any).navigate('CategoryFeed', { categoryId: (index + 1).toString() })}
-              >
-                <Image source={{ uri: category.image }} style={styles.categoryImage} />
-                <View style={styles.categoryOverlay}>
-                  <Text style={styles.categoryName}>{category.name}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+        {/* Hero Section - Text Only */}
+        <View style={[styles.heroSection, { backgroundColor: '#1a1a1a' }]}>
+          <Text style={[styles.heroTitle, { color: colors.gold }]}>
+            Welcome to Lumina
+          </Text>
+          <Text style={[styles.heroSubtitle, { color: colors.textSecondary }]}>
+            Discover architectural excellence, share inspiring designs, and connect with the global architecture community.
+          </Text>
         </View>
 
         {/* Feed */}
@@ -149,73 +118,22 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   heroSection: {
-    height: 200,
-    marginHorizontal: 12,
-    marginBottom: 24,
-    borderRadius: 16,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  heroBackground: {
-    width: '100%',
-    height: '100%',
-  },
-  heroOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    padding: 20,
-  },
-  heroTitle: {
-    color: '#ffffff',
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  heroSubtitle: {
-    color: '#ffffff',
-    fontSize: 16,
-    opacity: 0.9,
-  },
-  categoriesSection: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+    paddingHorizontal: 24,
+    paddingVertical: 32,
     marginBottom: 16,
   },
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+  heroTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center',
   },
-  categoryCard: {
-    width: (width - 56) / 2,
-    height: 120,
-    borderRadius: 16,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  categoryImage: {
-    width: '100%',
-    height: '100%',
-  },
-  categoryOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    padding: 12,
-  },
-  categoryName: {
-    color: '#ffffff',
+  heroSubtitle: {
     fontSize: 16,
-    fontWeight: '600',
+    lineHeight: 24,
+    textAlign: 'center',
+    maxWidth: 300,
+    alignSelf: 'center',
   },
   feed: {
     flex: 1,

@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 
 // Screens
 import HomeScreen from './src/screens/HomeScreen';
@@ -44,20 +45,41 @@ function TabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#6366f1',
+        tabBarActiveTintColor: '#fbbf24',
         tabBarInactiveTintColor: '#6b7280',
         tabBarStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: '#2a2a2a',
           borderTopWidth: 1,
-          borderTopColor: '#e5e7eb',
-          paddingBottom: 5,
-          paddingTop: 5,
+          borderTopColor: '#374151',
+          paddingBottom: 8,
+          paddingTop: 8,
           height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
         },
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <View style={[
+              styles.tabIconContainer,
+              focused && { backgroundColor: '#fbbf24', borderRadius: 20, padding: 8 }
+            ]}>
+              <Ionicons 
+                name={focused ? 'home' : 'home-outline'} 
+                size={size} 
+                color={focused ? '#000000' : color} 
+              />
+            </View>
+          ),
+        }}
+      />
       <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Create" component={CreateScreen} />
       <Tab.Screen name="Activity" component={ActivityScreen} />
@@ -65,6 +87,13 @@ function TabNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = {
+  tabIconContainer: {
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+};
 
 export default function App() {
   return (
