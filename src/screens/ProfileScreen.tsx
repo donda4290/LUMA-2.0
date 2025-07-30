@@ -27,9 +27,10 @@ const mockUser = {
   username: 'architect_designer',
   displayName: 'Alex Johnson',
   avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-  bio: 'Passionate architect exploring the intersection of form, function, and sustainability. Creating spaces that inspire and endure.',
+  bio: 'Passionate architect exploring the intersection of form, function, and sustainability.',
   location: 'New York, NY',
   website: 'alexjohnson.design',
+  coverImage: 'https://images.unsplash.com/photo-1511818966892-d612672e2540?w=800&h=300&fit=crop',
   stats: {
     posts: 42,
     followers: 1247,
@@ -80,42 +81,57 @@ export default function ProfileScreen() {
       ]}
       onPress={() => setActiveTab(tab)}
     >
-      <Ionicons
-        name={icon as any}
-        size={24}
-        color={activeTab === tab ? colors.primary : colors.textSecondary}
-      />
-      <Text style={[
-        styles.tabLabel,
-        { color: activeTab === tab ? colors.primary : colors.textSecondary }
+      <View style={[
+        styles.tabBadge,
+        { 
+          backgroundColor: activeTab === tab ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+          borderColor: activeTab === tab ? colors.primary : 'transparent'
+        }
       ]}>
-        {label}
-      </Text>
+        <Ionicons
+          name={icon as any}
+          size={20}
+          color={activeTab === tab ? colors.primary : colors.textSecondary}
+        />
+        <Text style={[
+          styles.tabLabel,
+          { color: activeTab === tab ? colors.primary : colors.textSecondary }
+        ]}>
+          {label}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <View style={styles.headerContent}>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>Profile</Text>
-        </View>
+      {/* Minimal Header */}
+      <View style={styles.header}>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Profile</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity style={styles.headerButton} onPress={toggleTheme}>
-            <Ionicons 
-              name={isDarkMode ? 'sunny' : 'moon'} 
-              size={24} 
-              color={colors.textSecondary} 
-            />
+            <View style={[styles.themeBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+              <Ionicons 
+                name={isDarkMode ? 'sunny' : 'moon'} 
+                size={18} 
+                color={colors.textSecondary} 
+              />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerButton}>
-            <Ionicons name="settings-outline" size={24} color={colors.textSecondary} />
+            <View style={[styles.settingsBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+              <Ionicons name="settings-outline" size={18} color={colors.textSecondary} />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Cover Image */}
+        <View style={styles.coverContainer}>
+          <Image source={{ uri: mockUser.coverImage }} style={styles.coverImage} />
+        </View>
+
         {/* Profile Info */}
         <View style={styles.profileSection}>
           <View style={styles.profileHeader}>
@@ -132,23 +148,27 @@ export default function ProfileScreen() {
               </Text>
               <View style={styles.profileDetails}>
                 <View style={styles.detailItem}>
-                  <Ionicons name="location" size={16} color={colors.textSecondary} />
-                  <Text style={[styles.detailText, { color: colors.textSecondary }]}>
-                    {mockUser.location}
-                  </Text>
+                  <View style={[styles.detailBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+                    <Ionicons name="location" size={14} color={colors.textSecondary} />
+                    <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+                      {mockUser.location}
+                    </Text>
+                  </View>
                 </View>
                 <View style={styles.detailItem}>
-                  <Ionicons name="link" size={16} color={colors.textSecondary} />
-                  <Text style={[styles.detailText, { color: colors.primary }]}>
-                    {mockUser.website}
-                  </Text>
+                  <View style={[styles.detailBadge, { backgroundColor: 'rgba(99, 102, 241, 0.1)', borderColor: colors.primary }]}>
+                    <Ionicons name="link" size={14} color={colors.primary} />
+                    <Text style={[styles.detailText, { color: colors.primary }]}>
+                      {mockUser.website}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
 
           {/* Stats */}
-          <View style={[styles.statsContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <View style={[styles.statsContainer, { backgroundColor: 'rgba(107, 114, 128, 0.05)', borderColor: colors.border }]}>
             {renderStatsItem('Posts', mockUser.stats.posts)}
             {renderStatsItem('Followers', mockUser.stats.followers)}
             {renderStatsItem('Following', mockUser.stats.following)}
@@ -157,11 +177,11 @@ export default function ProfileScreen() {
 
           {/* Action Buttons */}
           <View style={styles.actionButtons}>
-            <TouchableOpacity style={[styles.editButton, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <TouchableOpacity style={[styles.editButton, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
               <Text style={[styles.editButtonText, { color: colors.text }]}>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.shareButton, { backgroundColor: colors.primary }]}>
-              <Ionicons name="share-outline" size={20} color="#ffffff" />
+              <Ionicons name="share-outline" size={18} color="#ffffff" />
               <Text style={styles.shareButtonText}>Share</Text>
             </TouchableOpacity>
           </View>
@@ -180,8 +200,8 @@ export default function ProfileScreen() {
             <TouchableOpacity key={index} style={styles.postItem}>
               <Image source={{ uri: postImage }} style={styles.postImage} />
               <View style={styles.postOverlay}>
-                <View style={styles.postStats}>
-                  <Ionicons name="heart" size={16} color="#ffffff" />
+                <View style={[styles.postStats, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}>
+                  <Ionicons name="heart" size={14} color="#ffffff" />
                   <Text style={styles.postStatsText}>{(index + 1) * 23}</Text>
                 </View>
               </View>
@@ -192,11 +212,13 @@ export default function ProfileScreen() {
         {/* Empty state for other tabs */}
         {(activeTab === 'saved' || activeTab === 'liked') && (
           <View style={styles.emptyState}>
-            <Ionicons 
-              name={activeTab === 'saved' ? 'bookmark' : 'heart'} 
-              size={64} 
-              color={colors.textSecondary} 
-            />
+            <View style={[styles.emptyBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+              <Ionicons 
+                name={activeTab === 'saved' ? 'bookmark' : 'heart'} 
+                size={48} 
+                color={colors.textSecondary} 
+              />
+            </View>
             <Text style={[styles.emptyTitle, { color: colors.text }]}>
               No {activeTab} posts yet
             </Text>
@@ -223,10 +245,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  headerContent: {
-    flex: 1,
   },
   headerTitle: {
     fontSize: 24,
@@ -235,16 +253,35 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
   headerButton: {
+    // No additional styling needed
+  },
+  themeBadge: {
     padding: 8,
-    marginLeft: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  settingsBadge: {
+    padding: 8,
+    borderRadius: 20,
+    borderWidth: 1,
   },
   content: {
     flex: 1,
   },
+  coverContainer: {
+    height: 150,
+    position: 'relative',
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
+  },
   profileSection: {
     padding: 16,
+    marginTop: -40,
   },
   profileHeader: {
     flexDirection: 'row',
@@ -255,6 +292,8 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     marginRight: 16,
+    borderWidth: 4,
+    borderColor: '#ffffff',
   },
   profileInfo: {
     flex: 1,
@@ -277,19 +316,26 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   detailItem: {
+    // No additional styling needed
+  },
+  detailBadge: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 4,
   },
   detailText: {
-    fontSize: 14,
-    marginLeft: 6,
+    fontSize: 12,
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
     marginBottom: 20,
   },
@@ -312,7 +358,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 20,
     borderWidth: 1,
     alignItems: 'center',
   },
@@ -325,7 +371,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 20,
     gap: 8,
   },
   shareButtonText: {
@@ -340,16 +386,20 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     flex: 1,
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  tabBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderBottomWidth: 2,
-    borderBottomColor: 'transparent',
-    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+    gap: 6,
   },
   tabLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
   },
   postsGrid: {
@@ -362,6 +412,7 @@ const styles = StyleSheet.create({
     height: (width - 48) / 3,
     marginBottom: 2,
     marginRight: 2,
+    position: 'relative',
   },
   postImage: {
     width: '100%',
@@ -375,7 +426,6 @@ const styles = StyleSheet.create({
   postStats: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 8,
@@ -391,10 +441,15 @@ const styles = StyleSheet.create({
     paddingVertical: 64,
     paddingHorizontal: 32,
   },
+  emptyBadge: {
+    padding: 16,
+    borderRadius: 24,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 16,
     marginBottom: 8,
   },
   emptySubtitle: {

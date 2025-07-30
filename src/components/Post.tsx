@@ -56,13 +56,15 @@ export const Post: React.FC<PostProps> = ({ post, onPress }) => {
         );
       case 'text':
         return (
-          <Text style={[styles.postText, { color: colors.text }]}>
-            {post.content.text}
-          </Text>
+          <View style={[styles.textContainer, { backgroundColor: colors.card }]}>
+            <Text style={[styles.postText, { color: colors.text }]}>
+              {post.content.text}
+            </Text>
+          </View>
         );
       case 'quote':
         return (
-          <View style={[styles.quoteContainer, { borderLeftColor: colors.primary }]}>
+          <View style={[styles.quoteContainer, { backgroundColor: colors.card }]}>
             <Text style={[styles.quoteText, { color: colors.text }]}>
               "{post.content.text}"
             </Text>
@@ -74,7 +76,7 @@ export const Post: React.FC<PostProps> = ({ post, onPress }) => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.card, borderColor: colors.border }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Post Header */}
       <View style={styles.header}>
         <View style={styles.authorInfo}>
@@ -87,18 +89,13 @@ export const Post: React.FC<PostProps> = ({ post, onPress }) => {
               {post.author.displayName}
             </Text>
             <Text style={[styles.username, { color: colors.textSecondary }]}>
-              @{post.author.username}
+              {post.timestamp}
             </Text>
           </View>
         </View>
-        <View style={styles.headerRight}>
-          <Text style={[styles.timestamp, { color: colors.textSecondary }]}>
-            {post.timestamp}
-          </Text>
-          <TouchableOpacity style={styles.moreButton}>
-            <Ionicons name="ellipsis-horizontal" size={20} color={colors.textSecondary} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.moreButton}>
+          <Ionicons name="ellipsis-horizontal" size={20} color={colors.textSecondary} />
+        </TouchableOpacity>
       </View>
 
       {/* Post Content */}
@@ -107,40 +104,63 @@ export const Post: React.FC<PostProps> = ({ post, onPress }) => {
       </View>
 
       {/* Post Actions */}
-      <View style={[styles.actions, { borderTopColor: colors.border }]}>
+      <View style={styles.actions}>
         <View style={styles.leftActions}>
           <TouchableOpacity style={styles.actionButton} onPress={handleLike}>
-            <Ionicons
-              name={liked ? 'heart' : 'heart-outline'}
-              size={24}
-              color={liked ? '#ef4444' : colors.textSecondary}
-            />
-            <Text style={[styles.actionText, { color: colors.textSecondary }]}>
-              {formatNumber(likesCount)}
-            </Text>
+            <View style={[
+              styles.actionBadge,
+              { 
+                backgroundColor: liked ? 'rgba(239, 68, 68, 0.1)' : 'rgba(107, 114, 128, 0.1)',
+                borderColor: liked ? '#ef4444' : colors.border
+              }
+            ]}>
+              <Ionicons
+                name={liked ? 'heart' : 'heart-outline'}
+                size={18}
+                color={liked ? '#ef4444' : colors.textSecondary}
+              />
+              <Text style={[
+                styles.actionText,
+                { color: liked ? '#ef4444' : colors.textSecondary }
+              ]}>
+                {formatNumber(likesCount)}
+              </Text>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="chatbubble-outline" size={24} color={colors.textSecondary} />
-            <Text style={[styles.actionText, { color: colors.textSecondary }]}>
-              {formatNumber(post.stats.comments)}
-            </Text>
+            <View style={[styles.actionBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+              <Ionicons name="chatbubble-outline" size={18} color={colors.textSecondary} />
+              <Text style={[styles.actionText, { color: colors.textSecondary }]}>
+                {formatNumber(post.stats.comments)}
+              </Text>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="share-outline" size={24} color={colors.textSecondary} />
-            <Text style={[styles.actionText, { color: colors.textSecondary }]}>
-              {formatNumber(post.stats.shares)}
-            </Text>
+            <View style={[styles.actionBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+              <Ionicons name="share-outline" size={18} color={colors.textSecondary} />
+              <Text style={[styles.actionText, { color: colors.textSecondary }]}>
+                {formatNumber(post.stats.shares)}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.actionButton} onPress={handleBookmark}>
-          <Ionicons
-            name={bookmarked ? 'bookmark' : 'bookmark-outline'}
-            size={24}
-            color={bookmarked ? colors.primary : colors.textSecondary}
-          />
+          <View style={[
+            styles.actionBadge,
+            { 
+              backgroundColor: bookmarked ? 'rgba(99, 102, 241, 0.1)' : 'rgba(107, 114, 128, 0.1)',
+              borderColor: bookmarked ? colors.primary : colors.border
+            }
+          ]}>
+            <Ionicons
+              name={bookmarked ? 'bookmark' : 'bookmark-outline'}
+              size={18}
+              color={bookmarked ? colors.primary : colors.textSecondary}
+            />
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -149,25 +169,17 @@ export const Post: React.FC<PostProps> = ({ post, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
+    marginHorizontal: 12,
     marginVertical: 8,
     borderRadius: 16,
-    borderWidth: 1,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   authorInfo: {
     flexDirection: 'row',
@@ -175,52 +187,51 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     marginRight: 12,
   },
   authorText: {
     flex: 1,
   },
   authorName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     marginBottom: 2,
   },
   username: {
-    fontSize: 14,
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  timestamp: {
-    fontSize: 12,
-    marginRight: 8,
+    fontSize: 13,
   },
   moreButton: {
     padding: 4,
   },
   content: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingBottom: 12,
   },
   postImage: {
-    width: width - 64,
-    height: (width - 64) * 0.75,
+    width: width - 56,
+    height: (width - 56) * 0.8,
     borderRadius: 12,
+  },
+  textContainer: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(107, 114, 128, 0.1)',
   },
   postText: {
     fontSize: 16,
     lineHeight: 24,
   },
   quoteContainer: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(107, 114, 128, 0.1)',
     borderLeftWidth: 4,
-    paddingLeft: 16,
-    paddingVertical: 12,
-    backgroundColor: 'rgba(99, 102, 241, 0.05)',
-    borderRadius: 8,
+    borderLeftColor: '#6366f1',
   },
   quoteText: {
     fontSize: 16,
@@ -233,21 +244,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: 1,
+    paddingBottom: 16,
   },
   leftActions: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
   actionButton: {
+    // No additional styling needed
+  },
+  actionBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 24,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    gap: 6,
   },
   actionText: {
-    fontSize: 14,
-    marginLeft: 6,
+    fontSize: 13,
     fontWeight: '500',
   },
 }); 

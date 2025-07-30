@@ -21,7 +21,7 @@ export default function ExploreScreen() {
   const navigation = useNavigation();
 
   const handleCategoryPress = (categoryId: string) => {
-    navigation.navigate('CategoryFeed' as never, { categoryId } as never);
+    (navigation as any).navigate('CategoryFeed', { categoryId });
   };
 
   const formatNumber = (num: number): string => {
@@ -35,11 +35,13 @@ export default function ExploreScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
+      {/* Minimal Header */}
+      <View style={styles.header}>
         <Text style={[styles.headerTitle, { color: colors.text }]}>Explore</Text>
         <TouchableOpacity style={styles.searchButton}>
-          <Ionicons name="search" size={24} color={colors.textSecondary} />
+          <View style={[styles.searchBadge, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+            <Ionicons name="search" size={20} color={colors.textSecondary} />
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -49,8 +51,8 @@ export default function ExploreScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         {/* Search Bar */}
-        <TouchableOpacity style={[styles.searchBar, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Ionicons name="search" size={20} color={colors.textSecondary} />
+        <TouchableOpacity style={[styles.searchBar, { backgroundColor: 'rgba(107, 114, 128, 0.1)', borderColor: colors.border }]}>
+          <Ionicons name="search" size={18} color={colors.textSecondary} />
           <Text style={[styles.searchPlaceholder, { color: colors.textSecondary }]}>
             Search architecture, designers, projects...
           </Text>
@@ -63,7 +65,7 @@ export default function ExploreScreen() {
             {mockCategories.map((category) => (
               <TouchableOpacity
                 key={category.id}
-                style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                style={styles.categoryCard}
                 onPress={() => handleCategoryPress(category.id)}
               >
                 <Image
@@ -73,7 +75,11 @@ export default function ExploreScreen() {
                 />
                 <View style={styles.categoryOverlay}>
                   <Text style={styles.categoryName}>{category.name}</Text>
-                  <Text style={styles.categoryCount}>{formatNumber(category.postCount)} posts</Text>
+                  <View style={styles.categoryStats}>
+                    <View style={[styles.statBadge, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+                      <Text style={styles.statText}>{formatNumber(category.postCount)} posts</Text>
+                    </View>
+                  </View>
                 </View>
               </TouchableOpacity>
             ))}
@@ -84,21 +90,27 @@ export default function ExploreScreen() {
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Trending</Text>
           <View style={styles.trendingList}>
-            {[1, 2, 3].map((item) => (
-              <View key={item} style={[styles.trendingItem, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                <View style={styles.trendingRank}>
-                  <Text style={[styles.rankText, { color: colors.primary }]}>#{item}</Text>
+            {[
+              { title: 'Modern Minimalist Design', subtitle: 'Trending in Architecture', rank: 1 },
+              { title: 'Sustainable Building Materials', subtitle: 'Trending in Green Design', rank: 2 },
+              { title: 'Urban Planning Innovations', subtitle: 'Trending in City Design', rank: 3 },
+            ].map((item, index) => (
+              <TouchableOpacity key={index} style={[styles.trendingItem, { backgroundColor: 'rgba(107, 114, 128, 0.05)', borderColor: colors.border }]}>
+                <View style={[styles.rankBadge, { backgroundColor: colors.primary }]}>
+                  <Text style={styles.rankText}>#{item.rank}</Text>
                 </View>
                 <View style={styles.trendingContent}>
                   <Text style={[styles.trendingTitle, { color: colors.text }]}>
-                    Modern Minimalist Design
+                    {item.title}
                   </Text>
                   <Text style={[styles.trendingSubtitle, { color: colors.textSecondary }]}>
-                    Trending in Architecture
+                    {item.subtitle}
                   </Text>
                 </View>
-                <Ionicons name="trending-up" size={20} color={colors.primary} />
-              </View>
+                <View style={[styles.trendBadge, { backgroundColor: 'rgba(99, 102, 241, 0.1)', borderColor: colors.primary }]}>
+                  <Ionicons name="trending-up" size={16} color={colors.primary} />
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -117,14 +129,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
   },
   searchButton: {
+    // No additional styling needed
+  },
+  searchBadge: {
     padding: 8,
+    borderRadius: 20,
+    borderWidth: 1,
   },
   scrollView: {
     flex: 1,
@@ -137,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 24,
     borderWidth: 1,
     marginBottom: 24,
   },
@@ -156,15 +172,14 @@ const styles = StyleSheet.create({
   categoriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    gap: 12,
   },
   categoryCard: {
-    width: (width - 48) / 2,
-    height: 120,
-    borderRadius: 12,
-    borderWidth: 1,
+    width: (width - 56) / 2,
+    height: 140,
+    borderRadius: 16,
     overflow: 'hidden',
-    marginBottom: 12,
+    position: 'relative',
   },
   categoryImage: {
     width: '100%',
@@ -180,14 +195,22 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
-    marginBottom: 2,
+    marginBottom: 8,
   },
-  categoryCount: {
+  categoryStats: {
+    flexDirection: 'row',
+  },
+  statBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statText: {
     color: '#ffffff',
     fontSize: 12,
-    opacity: 0.8,
+    fontWeight: '500',
   },
   trendingList: {
     gap: 12,
@@ -196,20 +219,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
   },
-  trendingRank: {
-    width: 40,
+  rankBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
   },
   rankText: {
-    fontSize: 18,
+    color: '#ffffff',
+    fontSize: 14,
     fontWeight: 'bold',
   },
   trendingContent: {
     flex: 1,
-    marginLeft: 12,
   },
   trendingTitle: {
     fontSize: 16,
@@ -218,5 +245,10 @@ const styles = StyleSheet.create({
   },
   trendingSubtitle: {
     fontSize: 14,
+  },
+  trendBadge: {
+    padding: 6,
+    borderRadius: 12,
+    borderWidth: 1,
   },
 }); 
